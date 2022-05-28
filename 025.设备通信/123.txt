@@ -1,0 +1,5 @@
+﻿PopSnapEnergyCounters dq ?     ͨѶ
+
+g_wil_details_recordFeatureUsage
+
+_guard_dispatch_icall

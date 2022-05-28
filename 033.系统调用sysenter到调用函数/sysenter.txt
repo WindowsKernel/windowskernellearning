@@ -1,0 +1,85 @@
+在 Ring3 的代码调用了 sysenter 指令之后，CPU 会做出如下的操作：
+
+ss cs esp eip efl
+
+
+1． 将 SYSENTER_CS_MSR 的值装载到 cs 寄存器    174
+
+2． 将 SYSENTER_EIP_MSR 的值装载到 eip 寄存器  176
+
+3． 将 SYSENTER_CS_MSR 的值加 8（Ring0 的堆栈段描述符）装载到 ss 寄存器。
+
+4． 将 SYSENTER_ESP_MSR 的值装载到 esp 寄存器 175
+
+5． 将特权级切换到 Ring0
+
+6． 如果 EFLAGS 寄存器的 VM 标志被置位，则清除该标志
+
+7． 开始执行指定的 Ring0 代码
+
+在 Ring0 代码执行完毕，调用 SYSEXIT 指令退回 Ring3 时，CPU 会做出如下操作：
+
+1． 将 SYSENTER_CS_MSR 的值加 16（Ring3 的代码段描述符）装载到 cs 寄存器
+
+2． 将寄存器 edx 的值装载到 eip 寄存器
+
+3． 将 SYSENTER_CS_MSR 的值加 24（Ring3 的堆栈段描述符）装载到 ss 寄存器
+
+4． 将寄存器 ecx 的值装载到 esp 寄存器
+
+5． 将特权级切换到 Ring3
+
+6． 继续执行 Ring3 的代码
+
+
+CONTEXT
+
+KTRAP_FRAME
+
+pushad
+popad
+
+cs ss eip esp
+
+服务号的规则
+
+NTDLL 不和UI产生关系 这种系统调用 都是0x1000之下的编号
+
+USER32.DLL GDI32.dll win32u.dll 都是 0x1000之上的
+
+
+BE openprocess
+
+0x0000000F   FF
+0x00000010
+
+0x1F23
+0x10
+
+kd> dd KeServiceDescriptorTable   不和UI相关线程
+83f889c0  83e9cd9c 00000000 00000191 83e9d3e4
+83f889d0  00000000 00000000 00000000 00000000
+
+kd> dd KeServiceDescriptorTableShadow  和UI相关的线程
+83f88a00  83e9cd9c 00000000 00000191 83e9d3e4
+83f88a10  94a36000 00000000 00000339 94a3702c
+
+83e9cd9c 函数表
+00000000 count
+00000191 函数表中有多少个函数
+83e9d3e4 参数个数
+
+typedef struct _ServiceTableItem
+{
+  ULONG funcTable;
+  ULONG count;
+  ULONG funcMax;
+  PUCHAR paramTable;
+}ServiceTableItem
+
+
+1.保存现场
+
+2.复制参数
+
+3.CALL

@@ -1,0 +1,19 @@
+sysenter从哪里取cs ss eip esp ?
+只能提权3->0
+
+_KTSS
+_KPCR
+
+3b fs ->teb
+
+30 fs->KPCR
+当前CPU状态
+
+KPCR->KPRCB
+
+CONTEXT
+KTRAP_FRAME
+
+
+
+

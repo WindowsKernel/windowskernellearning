@@ -1,0 +1,12 @@
+﻿  Building 'GlobalHandleTable' with toolset 'WindowsKernelModeDriver10.0' and the 'Desktop' target platform.
+  entry.c
+D:\内核学习\windowskernellearning\043.全局句柄表\GlobalHandleTable\GlobalHandleTable\entry.c(10,39): warning C4047: “初始化”:“PHANDLE_TABLE”与“unsigned int”的间接级别不同
+D:\内核学习\windowskernellearning\043.全局句柄表\GlobalHandleTable\GlobalHandleTable\entry.c(15,28): warning C4100: “pDriver”: 未引用的形参
+D:\内核学习\windowskernellearning\043.全局句柄表\GlobalHandleTable\GlobalHandleTable\entry.c(23,1): warning C4152: 非标准扩展，表达式中的函数/数据指针转换
+D:\内核学习\windowskernellearning\043.全局句柄表\GlobalHandleTable\GlobalHandleTable\entry.c(20,62): warning C4100: “pReg”: 未引用的形参
+D:\内核学习\windowskernellearning\043.全局句柄表\GlobalHandleTable\GlobalHandleTable\entry.c(23,19): warning C4189: “ObGetObjectType_I”: 局部变量已初始化但不引用
+entry.obj : error LNK2019: 无法解析的外部符号 __imp__ZydisDecoderInit@12，函数 _GetPspCidTable@0 中引用了该符号
+entry.obj : error LNK2019: 无法解析的外部符号 __imp__ZydisDecoderDecodeBuffer@16，函数 _GetPspCidTable@0 中引用了该符号
+entry.obj : error LNK2019: 无法解析的外部符号 __imp__ZydisFormatterInit@8，函数 _GetPspCidTable@0 中引用了该符号
+entry.obj : error LNK2019: 无法解析的外部符号 __imp__ZydisFormatterFormatInstruction@24，函数 _GetPspCidTable@0 中引用了该符号
+D:\内核学习\windowskernellearning\043.全局句柄表\GlobalHandleTable\Release\GlobalHandleTable.sys : fatal error LNK1120: 4 个无法解析的外部命令

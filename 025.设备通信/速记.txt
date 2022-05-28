@@ -1,0 +1,62 @@
+3b 内存相关 大概率
+
+kv
+r rsp
+dqs rsp
+
+.cxr context
+切上下文
+
+dt _CONTEXT 和 .cxr 是一样的
+
+驱动下面有设备对象
+通信都是和设备进行通信
+
+驱动->exe
+设备->窗口
+
+R3根据名字找到设备，得到句柄
+可以给设备发消息
+在R0某个函数里打包成IRP
+然后调用驱动注册的回调函数
+dt _DEVICE_OBJECT
+DeviceExtension 设备对象扩展
+IoCreateDevice(
+	pDriver,
+	0, // 不要扩展内存
+	UNICODE_STRING("\\device\\xx"),
+	FILE_DEVICE_UNKNOWN, // 设备类型
+	FILE_DEVICE_SECURE_OPEN,
+	是否独占false,（句柄同时只能有一个人打开）
+	输出一个设备对象
+)
+if ntsuccess
+
+再来一个快捷方式
+"\\??\\xx" R0
+"\\\\.\\xx" R3
+"\\dosDevice\\"
+
+IoCreateSymbolicLink(
+	UNICODE_STRING("\\??\\xx")
+	设备名
+)
+
+如果失败，IoDeleteDevice(pDevice)
+
+去掉初始化标志
+pDevice->Flags &= ~DO_DEVICE_INITIALZING
+
+是用什么内存
+pDevice->Flags |= DO_BUFFERED_IO
+
+设置回调
+pDriver->MajorFunction[IRP_MJ_xxx]
+
+MJ_CREATE
+MJ_CLOSE
+MJ_CONTROL
+
+
+
+

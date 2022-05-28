@@ -1,0 +1,7 @@
+﻿  Building 'GlobalHandleTable' with toolset 'WindowsKernelModeDriver10.0' and the 'Desktop' target platform.
+  GlobalHandleTable.vcxproj -> D:\内核学习\windowskernellearning\043.全局句柄表\GlobalHandleTable\x64\Debug\GlobalHandleTable.sys
+  Done Adding Additional Store
+  Successfully signed: D:\\windowskernellearning\043.\GlobalHandleTable\x64\Debug\GlobalHandleTable.sys
+  
+  Inf2Cat task was skipped as there were no inf files to process
+  

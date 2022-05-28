@@ -1,0 +1,331 @@
+# windowskernellearning
+
+## 项目介绍
+
+报班请联系火哥QQ：471194425
+
+## 目录
+
+内核学习笔记
+
+- 001.装环境
+    - bcdedit设置双机调试环境
+    - 真机驱动开发环境
+    - win7x86虚拟机内的开发环境(vs2010)
+- 002.保护模式科普
+    - 科普了实模式、保护模式
+    - 保护模式高2G、低2G
+    - 段的科普
+- 003.段探测
+    - limit, base, address, type, p, g, s
+    - 拆GDT表段描述符
+- 004.D/B位TYPE位
+    - D/B位区分16/32位
+    - S=1时的TYPE位表示数据段和代码段的类型
+- 005.数据段代码段权限规则
+    - CPL, DPL, RPL
+    - 跨段跳转不提权(jmp far, call far)
+    - 远返回retf
+    - 上述指令对栈的影响
+    - 数据段，代码段，堆栈段权限总结
+- 006.调用门
+    - 关闭熔断补丁
+    - 调用门描述符
+    - 调用门提权，带参数和不带参数
+    - call far提权后对栈的影响
+    - JMP无法同时修改CS和SS，故无法用于提权
+    - RETF无法提权
+- 007.中断门
+    - sgdt,sidt,lgdt,lidt指令
+    - 中断和异常的区别（硬件和软件引起）
+    - IDT表
+    - 中断描述符
+    - 构造中断门提权
+    - 中断提权对栈的影响
+    - 中断提权retf返回（retf会平衡R3栈，返回前需sti开中断）
+- 008.中断门作业讲解，HOOK INT3
+    - 陷阱门和中断门的区别（中断门清除IF位，中断悬挂）
+        - 进入中断门会清除 efi VM NT IF TF位
+        - 进入陷阱门会清除 efi VM NT TF位
+        - 由于中断门会清除IF位，导致一些中断触发会悬挂,陷阱门则不会
+    - HOOK INT3
+        - 指令缓存
+        - sti，cli开关中断
+- 009.hookint3讲解
+    - 发现cli，sti导致的奇怪蓝屏
+- 010.TSS
+    - 任务和线程的区别
+        - 任务是CPU提供的并发机制，线程是操作系统实现的
+        - 本质上都是切换执行环境（批量替换寄存器）
+    - TR寄存器（task register）
+        - selector, base address, limit
+        - ltr, str 指令
+    - TSS（任务状态段）
+    - TSS描述符
+        - TSS描述符只存储在GDT表
+        - busy位用来防止递归切换任务
+        - 任务切换条件：CPL <= TSS.DPL
+    - Win7 x86 任务切换后会把 previous task link 的 CR3 清零
+    - 使用 iretd 进行任务切换需要把NT位置1
+    - JMP/CALL/IRET 对 busy, NT, previous task link 等属性的影响
+    - call far 任务段，iretd 返回
+    - jmp far 任务段
+        - jmp 返回
+        - iretd 返回
+    - 任务段进R1
+        - 在TSS中提供SS1,CS1,FS1的值
+        - 提权后不要下断
+- 011.任务门_101012环境配置
+    - 为什么要学TSS和任务门？8号错误（双重错误）
+    - 任务门进R0
+        - 在IDT表构造任务门
+        - 在GDT表构造TSS描述符
+        - 中断调用任务门
+    - 101012分页环境配置
+- 012.101012拆线性地址
+    - 为什么一个页是4KB
+    - 拆线性地址找物理地址
+    - 页目录项PDE，页表项PTE，页内偏移
+    - 科普MMU,TLB,页表缓存，L1一级缓存，二级缓存，三级缓存
+- 013.101010分页P, U/S, R/W
+    - 线性地址的属性由PDE,PTE做与运算得到
+    - P存在位, U/S特权位, R/W读写位
+    - NULL挂物理页
+- 014.101010NULL挂物理页讲解（即所谓的幽灵地址）
+    - 作业讲解，什么时候需要挂PDE
+    - 0地址挂shellcode
+    - 0地址挂dll (sDRI - Shellcode Reflective DLL Injection)
+- 015.101010页表基址
+    - MmIsAddressValid 逆向分析
+    - 101012分页机制梳理
+        - 纠正了012课对线性地址的误区
+            - 4KB小页线性地址拆分: Directory, Table, Offset
+            - 4MB大页线性地址拆分: Directory, Offset
+        - PS位区分大小页
+        - G全局位，仅在PDE.PS==1（大页）时，G位才有效
+        - PTE, PDE 属性说明
+    - 逆向分析 MiIsAddressValid
+        - 101012模式下，操作系统将页目录基址CR3映射到线性地址0xC0300000
+        - 第一张页表的线性地址在 0xC0000000
+        - 101012模式下 MiIsAddressValid 的编译器优化分析
+- 016.29912分页
+    - 页目录指针表PDPT
+    - PDPTE, PDE, PTE 都是每项8字节
+    - 拆线性地址
+    - 0xC0600000是第一张页目录表的线性地址
+    - 逆向分析 MiIsAddressValid
+    - MiIsAddressValid 的绕过技巧
+- 017.缓存科普
+    - CPU不支持PAT
+        - 默认4种缓存策略
+            - WB回写
+            - WT直写
+            - UC-弱缓存（仅缓存读）
+            - UC不可缓存
+    - CPU支持PAT
+        - 可通过RDMSR, WRMSR 读写IA32_PAT寄存器
+        - IA32_PAT存储了PAT0-PAT7的值
+- 018.NX位_TLB_周作业
+    - XD/NX位控制页执行权限
+    - TLB结构
+    - 实验：验证TLB的存在
+    - 实验：测试CR3切换对TLB的影响
+    - 实验：测试全局页切CR3时对TLB的影响
+    - 实验：invlpg指令刷TLB
+    - 所有高2G物理地址U/S位置1，实现R3访问高2G内存
+    - 思考题：利用调用门实现访问其他进程的内存
+- 019.PTEHOOK_控制寄存器位
+    - PTEHOOK原理
+    - CR0,CR2,CR3,CR4各个位的说明
+- 020.驱动第一课
+    - 驱动helloworld
+    - 驱动对抗简史
+    - A驱动读B驱动变量
+    - 看书《Windows内核安全与驱动开发》
+- 021.驱动字符串操作
+    - UNICODE_STRING 结构类型
+    - 初始化，比较
+    - 内存申请与释放
+    - 字符串格式化
+    - 数字字符串互转
+    - 宽窄字符串转换
+    - 字符串搜索
+- 022.链表
+    - 初始化，增删改查
+    - 链表逆向分析
+- 023.驱动断链
+    - 驱动链表，断链原理, _LDR_DATA_TABLE_ENTRY 结构
+    - 遍历驱动链表
+    - 创建内核线程，延时函数 KeDelayExecutionThread 
+    - ObReferenceObjectByName 获取内核对象
+    - 为什么不能在 DriverEntry 断自己
+- 024.蓝屏分析
+    - 学习使用 source insight 阅读 wrk 源码
+    - bug code 定位大致原因
+    - !analyze -v 分析蓝屏
+    - kv栈回溯
+        - 获取异常栈帧 TrapFrame
+        - .trap 恢复现场
+    - 异常的四个参数
+        - 错误描述
+        - 异常指令
+        - 异常记录块 EXCEPTION_RECORD
+        - 异常上下文 _CONTEXT
+    - .thread 查看当前线程栈范围
+    - 开启崩溃转储
+    - 分析几种蓝屏
+        - 递归蓝屏
+        - 访问内存错误
+        - 局部变量过大导致溢出
+        - 目标系统版本不对
+        - 使用已释放的内存
+- 025.设备通信
+    - .cxr 命令
+    - 设备通信模型，代码实现
+    - 回调函数类型
+- 026.IRP_设备栈_设备绑定_通用通信模板
+    - 预习《Windows内核安全与驱动开发》看第七章串口过滤
+        - IoGetDeviceObjectPointer 通过名字获取设备指针
+        - 使用 ObDereferenceObject 解引用文件对象
+        - IoCreateDevice 创建虚拟设备
+        - IoAttachDeviceToDeviceStack 附加设备
+        - IoDetachDevice 解除设备附加
+        - IoDeleteDevice 删除虚拟设备
+        - IoGetCurrentIrpStackLocation 获取当前设备栈空间
+        - 用一个回调函数处理所有IRP类型的方法
+        - IoSkipCurrentIrpStackLocation 跳过当前设备栈
+        - 使用通用方式处理 MDL, SystemBuffer 和 UserBuffer
+        - IoCallDriver 调用下一个设备处理IRP
+        - IoCompleteRequest 完成IRP请求
+    - 三种数据传输方式的对比
+        - Systembuffer是把R3内存拷贝到R0
+        - UserBuffer 是在R0直接使用R3内存，效率最高。如果发生进程切换，就会有问题
+        - MDL是把R3内存映射给R0，没有发生拷贝
+    - 如何跳过当前栈，让下一个设备处理IRP
+        - IoCopyCurrentIrpStackLocationToNext(Irp);
+        - IoSetNextIrpStackLocation(Irp);
+        - IoCallDriver(DeviceObject->NextDevice, Irp);
+    - 通用通信模板代码分析
+        - 不知道为啥同一份代码在公司电脑上是 SystemBuffer，在我的游戏本就是 UserBuffer
+        - 所谓通用，是指使用不同的通信方式，使用相同的通信包，和微软解耦
+    - 五一作业：劫持 \Driver\Null -> \Device\Null 的通信函数
+- 027.键盘过滤_hooknull
+    - 理解键盘过滤代码
+        - 尝试修复其中的bug（未完成）
+    - hook null设备
+        - 用winobj找null设备的链接名
+        - 在串口过滤的基础上稍作修改即可，没啥新东西
+- 028.内存加载驱动原理
+    - 使用INIT段隐藏入口代码
+    - DriverEntry 返回失败实现自卸载
+    - ZwQuerySystemInformation 查询模块信息
+    - 内存加载驱动实现隐藏不PG（类似R3的内存注入）
+        - 拉伸，修复重定位,IAT,COOKIE等操作
+- 029.内存加载驱动_加密_拉伸
+- 030.内存加载驱动_修复重定位IAT_加VMP
+- 031.内存加载驱动_自删除_抹注册表
+    - 代码在win10x64上测试没问题，加VMP也没问题，但自删除和抹注册表没时间看，挖个坑
+    - 其他代码都是我手敲过一遍的
+- 032.系统调用R3部分
+    - API调用最终通过nttll.dll进内核
+    - x86 KUSER_SHARED_DATA
+        - R3: 7ffe0000
+        - R0: ffdf0000
+        - +300h 是 SystemCall 成员，指向 KiFastSystemCall 函数
+    - KiFastSystemCall 用eax保存调用号，edx保存R3栈顶
+    - 自己实现VirtualProtect的R3部分
+- 033.系统调用sysenter到调用函数
+    - sysenter
+        - 从MSR寄存器获取CS,ESP,EIP
+        - CS+8得到SS
+        - 清空VM位
+    - KiFastCallEntry分析
+        - 保存现场
+        - 复制参数
+        - CALL函数
+- 034.系统调用返回R3_SSDTHOOK
+    - 调用函数后返回，有多种方式，需要根据SegCs判断
+        - 如果是R3调用，最终会iret返回
+    - SSDT HOOK
+        - 关闭页保护 CR0.WP
+        - 导出变量 KeServiceDescriptorTable
+- 035.SSDTHOOK_MDL_文件操作
+    - MDL映射物理页该权限
+    - 文件操作API
+    - 自动获取调用号
+- 036.进程结构_调试端口
+    - x64地址范围 2^48=256TB
+    - KPROCESS, EPROCESS 字段说明
+    - 遍历进程链表
+        - SeLocateProcessImageName 获取进程路径
+    - 抹除调试端口
+- 037.PID枚举进程_进程保护_反调试
+    - PID暴力枚举进程
+    - 伪造PID隐藏进程
+    - breakontermination保护
+    - protectedprocess反调试
+    - processinserted反调试
+- 038.线程结构
+    - KTHREAD,ETHREAD 部分字段说明
+    - 遍历线程链表
+    - 线程断链（要同时断K和E）
+    - PspTerminateThreadByPointer 杀主动防御
+- 039.KiFindReadyThread 分析
+    - 参数分析，逻辑分析
+    - KiSelectReadyThread 逆向
+- 040.线程切换
+    - 线程切换的两种情况
+        - 主动切换
+        - 时钟中断
+    - KiSwapContext
+    - SwapContext
+- 041.模拟线程切换
+- 042.时钟中断
+    - 时钟中断发生到切换线程的函数调用顺序
+        - HalpHpetClockInterrupt
+        - KeUpdateSystemTimeAssist
+        - KeUpdateSystemTime
+        - KeUpdateRunTime
+        - HalRequestSoftwareInterrupt
+        - KfLowerIrql
+        - HalpCheckForSoftwareInterrupt
+        - HalpDispatchSoftwareInterrupt
+        - KiQuantumEnd
+    - 时钟中断后主要做的几件事情
+        - 刷新硬件状态
+        - 时间累加
+        - 滴答更新
+        - DPC回调派发
+        - 定时器回调派发
+        - 线程切换
+        - APC派发
+        - DR7检查
+        - 双机断点检查
+- 043.全局句柄表
+    - 对象头 OBJECT_HEADER
+        - ObfDereferenceObject
+            - CONTAINING_RECORD
+        - 引用计数
+        - TypeIndex 对象类型
+    - ObGetObjectType 未文档化函数获取对象类型
+    - 对象类型数组 ObTypeIndexTable 未导出
+    - windbg x模糊搜索
+    - 全局句柄表结构
+        - 可扩展，最大三级结构
+    - 手工通过PID找EPROCESS
+    - 遍历全局句柄表并打印进程名
+        - 判断对象类型
+        - 句柄表项Object解密
+            - win7x86 低3位清零
+            - win10 右移16位然后低3位清零
+            - 解密具体操作可以通过逆向获取得到，没啥好说的
+- 044.私有句柄表
+    - 私有句柄表项低4字节低3位清零指向对象头
+    - 低四字节低3位属性位
+        - 有效位，继承位，关闭保护位
+    - 高四字节是权限掩码，可以用来给句柄降权
+    - 循环打开进程观察TableCode低2位变化
+    - 未文档化函数 ExEnumHandleTable 遍历句柄表
+    - 句柄回调降权保护和绕过方式
+
+

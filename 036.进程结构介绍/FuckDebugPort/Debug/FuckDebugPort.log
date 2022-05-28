@@ -1,0 +1,11 @@
+﻿  Building 'FuckDebugPort' with toolset 'WindowsKernelModeDriver10.0' and the 'Desktop' target platform.
+  main.c
+D:\repo\windowskernellearning\036.进程结构介绍\FuckDebugPort\main.c(18,28): warning C4100: “pDriver”: 未引用的形参
+D:\repo\windowskernellearning\036.进程结构介绍\FuckDebugPort\main.c(25,13): warning C4100: “StartContext”: 未引用的形参
+D:\repo\windowskernellearning\036.进程结构介绍\FuckDebugPort\main.c(60,62): warning C4100: “pReg”: 未引用的形参
+  FuckDebugPort.vcxproj -> D:\repo\windowskernellearning\036.进程结构介绍\LiteralProcessLinks\Debug\FuckDebugPort.sys
+  Done Adding Additional Store
+  Successfully signed: D:\repo\windowskernellearning\036.\LiteralProcessLinks\Debug\FuckDebugPort.sys
+  
+  Inf2Cat task was skipped as there were no inf files to process
+  

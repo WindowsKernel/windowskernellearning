@@ -1,0 +1,12 @@
+1.首先创建一个引导 
+
+2.重启
+
+3.选择刚刚创建的那个引导
+
+4.bcdedit设置如下两条指令
+
+
+bcdedit /set pae ForceDisable
+
+bcdedit /set nx AlwaysOff

@@ -1,0 +1,101 @@
+重建页表
+复制所有PDE PTE 物理页
+在自己进程里hook api
+做通信
+过PG
+模拟低2G的隔离
+相当于把所有PDE PTE 物理页复制一份，hook自己的进程，不影响别人 
+PTE HOOK
+
+2.5 control registers
+CR2
+缺页，回调页异常中断
+尝试修复
+遍历VAD，页是不是在磁盘上
+CR2记录了出问题的地址
+
+CR0
+PG, PE位置1
+PE=1 开启段
+PG=1 开启页
+可以只开段，不开页
+段页模式
+段模式
+实模式
+TS task switch
+进入任务段时置1
+CR0.CD是缓存总开关
+CR0用的最多是WP位
+R/W=0 页不可写
+WP置0，就可以写辣
+CR0.AM位：
+X86
+R3对齐
+AM置1，栈必须4/8字节对齐
+
+CR4.VME 开启虚拟8086
+CR4.PVI 虚拟8086模式下的模拟中断
+TSD置1 R3可以调用rdtsc
+DE位
+DR0-DR7硬件调试
+DR4-DR5无法访问
+DE=1，DR4==DR6, DR5==DR7
+DE=0，访问这俩会异常
+PSE=1，大页有效；否则无效
+PAE=1，29912； 否则101012
+MCE 开启机器检查中断0x12
+PGE=1 页的G位有效，否则无效
+置0再置1就可以刷TLB的G页
+PCE 监控事件开关
+PCIDE x64 用，每个进程的CR3是否缓存
+FSGSBASE = 1时：
+fs.base可以不通过段解析去拆分获得
+rdmsr(IA32E_FS_BASE)直接读base
+获取FS是为了拿KPCR，有其他方式
+SMEP SMAP
+super mode execute/access
+置位，R0无法访问R3
+直接改会PG
+CR0.AM=1，SME才生效
+所以CR0.AM=1，就可以忽略SME
+R0访问R3了
+CR4.CET 火哥也没用过
+CR4.PKS 没卵用，给页表加密用
+置1后 CR3的值是加密值，只在X64生效
+
+VMXE=1 开启VT
+SMXE=1 开启上帝模式（h很神秘）
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

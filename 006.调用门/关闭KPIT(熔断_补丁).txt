@@ -1,0 +1,5 @@
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management]
+ 
+"FeatureSettingsOverrideMask"=dword:00000003
+ 
+"FeatureSettingsOverride"=dword:00000003

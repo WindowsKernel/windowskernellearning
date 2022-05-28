@@ -1,0 +1,11 @@
+2022年4月13日
+
+纠正了对PDE,Directory,PTE,Table的理解误区
+
+101012线性地址高10位拆出来的是 页目录下标Directory, 不是PDE
+
+中间10位是Table页表下标，不是PTE
+
+&PDE = CR3.Address + Directory * 4
+&PTE = PDE.Address + Table * 4
+物理地址 = PTE.Address + Offset

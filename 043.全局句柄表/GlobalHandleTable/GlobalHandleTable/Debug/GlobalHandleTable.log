@@ -1,0 +1,16 @@
+﻿  Building 'GlobalHandleTable' with toolset 'WindowsKernelModeDriver10.0' and the 'Desktop' target platform.
+  entry.c
+D:\内核学习\windowskernellearning\043.全局句柄表\GlobalHandleTable\GlobalHandleTable\entry.c(19,28): warning C4100: “pDriver”: 未引用的形参
+D:\内核学习\windowskernellearning\043.全局句柄表\GlobalHandleTable\GlobalHandleTable\entry.c(24,62): warning C4100: “pReg”: 未引用的形参
+D:\内核学习\windowskernellearning\043.全局句柄表\GlobalHandleTable\GlobalHandleTable\entry.c(82,39): warning C4022: “MmIsAddressValid”: 指针与实参 1 不匹配
+D:\内核学习\windowskernellearning\043.全局句柄表\GlobalHandleTable\GlobalHandleTable\entry.c(84,64): warning C4022: “ObGetObjectType_I”: 指针与实参 1 不匹配
+D:\内核学习\windowskernellearning\043.全局句柄表\GlobalHandleTable\GlobalHandleTable\entry.c(112,41): warning C4022: “MmIsAddressValid”: 指针与实参 1 不匹配
+D:\内核学习\windowskernellearning\043.全局句柄表\GlobalHandleTable\GlobalHandleTable\entry.c(114,66): warning C4022: “ObGetObjectType_I”: 指针与实参 1 不匹配
+D:\内核学习\windowskernellearning\043.全局句柄表\GlobalHandleTable\GlobalHandleTable\entry.c(71,1): warning C4152: 非标准扩展，表达式中的函数/数据指针转换
+D:\内核学习\windowskernellearning\043.全局句柄表\GlobalHandleTable\GlobalHandleTable\entry.c(73,1): warning C4047: “初始化”:“PUCHAR”与“ULONG_PTR”的间接级别不同
+  GlobalHandleTable.vcxproj -> D:\内核学习\windowskernellearning\043.全局句柄表\GlobalHandleTable\Debug\GlobalHandleTable.sys
+  Done Adding Additional Store
+  Successfully signed: D:\\windowskernellearning\043.\GlobalHandleTable\Debug\GlobalHandleTable.sys
+  
+  Inf2Cat task was skipped as there were no inf files to process
+  

@@ -1,0 +1,10 @@
+﻿  Building 'LiteralProcessLinks' with toolset 'WindowsKernelModeDriver10.0' and the 'Desktop' target platform.
+  main.c
+D:\repo\windowskernellearning\036.进程结构介绍\LiteralProcessLinks\LiteralProcessLinks\main.c(8,28): warning C4100: “pDriver”: 未引用的形参
+D:\repo\windowskernellearning\036.进程结构介绍\LiteralProcessLinks\LiteralProcessLinks\main.c(13,62): warning C4100: “pReg”: 未引用的形参
+  LiteralProcessLinks.vcxproj -> D:\repo\windowskernellearning\036.进程结构介绍\LiteralProcessLinks\Debug\LiteralProcessLinks.sys
+  Done Adding Additional Store
+  Successfully signed: D:\repo\windowskernellearning\036.\LiteralProcessLinks\Debug\LiteralProcessLinks.sys
+  
+  Inf2Cat task was skipped as there were no inf files to process
+  
